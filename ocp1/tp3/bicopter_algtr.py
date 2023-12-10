@@ -55,7 +55,7 @@ class BicopterStateError(proxddp.StageFunction):
         data.value[:] = r
 
 # %jupyter_snippet computeJacobians
-    def computeJacobians(self, x, u, y, data: dynamics.StageFunctionData):
+    def computeJacobians(self, x, u, y, data: proxddp.StageFunctionData):
         # you can implement the derivatives of the error function here
         pass
 # %end_jupyter_snippet
@@ -130,11 +130,41 @@ xs_opt = rs.xs.tolist()
 
 # %jupyter_snippet plot
 plotBicopterSolution(xs_opt)
+# %end_jupyter_snippet
 
 print('Type plt.show() to display the result.')
-# %end_jupyter_snippet
 
 # %jupyter_snippet viz
 viz = ViewerBicopter()
 viz.displayTrajectory(xs_opt, timeStep)
+# %end_jupyter_snippet
+
+# %jupyter_snippet cstr_define
+lb = np.array([0, 0])
+ub = np.array([1e4, 1e4])
+boxcstr = proxddp.constraints.BoxConstraint(lb, ub)
+fn = proxddp.ControlErrorResidual(space.ndx, np.zeros(nu))
+# %end_jupyter_snippet
+
+# %jupyter_snippet cstr_ocp_solve
+from proxnlp import LSInterpolation
+stage.addConstraint(fn, boxcstr)
+cproblem = proxddp.TrajOptProblem(x0, [stage] * T, term_cost)
+mu_init = 0.1
+solver = proxddp.SolverProxDDP(1e-3, mu_init=mu_init, verbose=proxddp.VERBOSE)
+solver.setup(problem)
+solver.max_iters = 100
+lsp: proxddp.LinesearchOptions = solver.ls_params
+lsp.verbosity = proxddp.VERBOSE
+lsp.alpha_min = 1e-2
+# for i in range(T):
+#     scalers_: proxddp.ProxScaler = solver.workspace.getConstraintScaler(1)
+#     scalers_.set_weight(1e8, 1)
+done = solver.run(cproblem, [x0] * (T+1), [np.zeros(nu)] * T)
+assert done
+
+cres = solver.results
+print(cres)
+
+plotBicopterSolution(cres.xs)
 # %end_jupyter_snippet
