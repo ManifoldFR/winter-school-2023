@@ -1,0 +1,2 @@
+viz = ViewerBicopter()
+viz.displayTrajectory(xs_opt, timeStep)

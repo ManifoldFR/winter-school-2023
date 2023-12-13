@@ -1,0 +1,6 @@
+term_cost = rcost.copy()
+term_cost.w_x[:] = 100.0 ** 2
+term_cost.w_u[:] = 0.0
+
+# Define the optimal control problem.
+problem = proxddp.TrajOptProblem(x0, [stage] * T, term_cost)

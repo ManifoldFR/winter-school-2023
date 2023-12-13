@@ -1,0 +1,9 @@
+class BicopterStateError(proxddp.StageFunction):
+    def __init__(self):
+        super().__init__(6, nu, nr=12)
+
+    def evaluate(self, x, u, y, data: proxddp.StageFunctionData):
+        x1, x2, th, v1, v2, w = x
+        fr, fl = u
+        s, c = np.sin(th), np.cos(th)
+        # finish implementation here

@@ -1,0 +1,2 @@
+rs: proxddp.Results = ddp.results
+plotUnicycleSolution(rs.xs)

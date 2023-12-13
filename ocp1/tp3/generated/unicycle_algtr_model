@@ -1,0 +1,7 @@
+cost_weights = np.array([1.0, 1.0])
+dt = 0.1
+dyn_model = UnicycleDynamics(dt)
+rcost = proxddp.QuadraticCost(
+    w_x=cost_weights[0] * np.eye(3), w_u=cost_weights[1] * np.eye(2)
+)
+stage = proxddp.StageModel(rcost, dyn_model)

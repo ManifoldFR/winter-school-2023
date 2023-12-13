@@ -1,0 +1,3 @@
+def computeJacobians(self, x, u, y, data: dynamics.StageFunctionData):
+        # you can implement the derivatives of the error function here
+        pass

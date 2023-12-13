@@ -1,0 +1,4 @@
+# Select the solver for this problem
+TOL = 1e-5
+ddp = proxddp.SolverProxDDP(TOL, verbose=proxddp.VERBOSE)
+ddp.setup(problem)

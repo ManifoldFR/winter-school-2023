@@ -1,0 +1,23 @@
+class UnicycleDynamics(dynamics.ExplicitDynamicsModel):
+    def __init__(self, timestep):
+        space = manifolds.R3()
+        super().__init__(space, 2)
+        self.dt = timestep
+
+    def forward(self, x, u, data: dynamics.ExplicitDynamicsData):
+        c, s = np.cos(x[2]), np.sin(x[2])
+        data.xnext[:] = [
+            x[0] + c * u[0] * self.dt,
+            x[1] + s * u[0] * self.dt,
+            x[2] + u[1] * self.dt,
+        ]
+
+    def dForward(self, x, u, data: dynamics.ExplicitDynamicsData):
+        c, s = np.cos(x[2]), np.sin(x[2])
+        data.Jx[:] = np.eye(3)
+        data.Jx[0, 2] = -s * u[0] * self.dt
+        data.Jx[1, 2] = c * u[0] * self.dt
+
+        data.Ju[0, 0] = c * self.dt
+        data.Ju[1, 0] = s * self.dt
+        data.Ju[2, 1] = self.dt

@@ -1,0 +1,8 @@
+def bicopter_acc_impl(x, u, span, mass, g):
+    # Implementation of the Bicopter acceleration
+    inertia = mass * span**2
+    x1, x2, th, v1, v2, w = x
+    fr, fl = u
+    s, c = np.sin(th), np.cos(th)
+    loc_f = np.array([0, fr + fl, (fl - fr) * span])
+    return np.array([-loc_f[1] * s / mass, loc_f[1] * c / mass - g, loc_f[2] / inertia])

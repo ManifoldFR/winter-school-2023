@@ -1,0 +1,7 @@
+# Use the finite-difference helpers from proxddp
+# DynamicsFiniteDifferenceHelper, FiniteDifferenceHelper 
+fd_eps = 1e-4
+dyn_model_nd = proxddp.DynamicsFiniteDifferenceHelper(space, dyn_model_, fd_eps)
+state_err_nd = proxddp.FiniteDifferenceHelper(space, state_err_, fd_eps)
+# define a quadratic cost from the bicopter state error
+rcost = proxddp.QuadraticResidualCost(space, state_err_nd, np.diag(costWeights ** 2 * timeStep))

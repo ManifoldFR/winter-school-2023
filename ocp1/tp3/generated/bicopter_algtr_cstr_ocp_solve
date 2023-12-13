@@ -1,0 +1,13 @@
+cproblem = proxddp.TrajOptProblem(x0, [stage] * T, term_cost)
+mu_init = 0.01
+solver = proxddp.SolverProxDDP(1e-3, mu_init=mu_init, verbose=proxddp.VERBOSE)
+solver.setup(problem)
+solver.max_iters = 60
+solver.rollout_type = proxddp.ROLLOUT_LINEAR
+lsp: proxddp.LinesearchOptions = solver.ls_params
+lsp.alpha_min = 1e-4
+for i in range(T):
+    scalers_: proxddp.ProxScaler = solver.workspace.getConstraintScaler(1)
+    scalers_.set_weight(0.01, 1)
+done = solver.run(cproblem, [x0] * (T+1), [np.zeros(nu)] * T)
+assert done

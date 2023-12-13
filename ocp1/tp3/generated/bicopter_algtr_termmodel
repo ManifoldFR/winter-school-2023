@@ -1,0 +1,6 @@
+# Terminal cost: same as the runningcost, but we increase the cost weights
+# in the library, they're a square matrix you can access through `cost.weights`
+term_cost = proxddp.QuadraticResidualCost(space, state_err_nd, np.diag(costWeights ** 2))
+_w = np.diagonal(term_cost.weights)
+_w.setflags(write=True)
+_w[:] = 1e4

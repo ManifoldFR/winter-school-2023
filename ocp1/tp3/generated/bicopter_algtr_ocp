@@ -1,0 +1,12 @@
+stage = proxddp.StageModel(rcost, dyn_model_nd)
+problem = proxddp.TrajOptProblem(x0, [stage] * T, term_cost)
+
+TOL = 1e-5
+verbosity = proxddp.VERBOSE
+solver = proxddp.SolverProxDDP(TOL, max_iters=300, verbose=verbosity)
+solver.setup(problem)  # allocate data for this problem
+ok = solver.run(problem, [], [])
+
+rs: proxddp.Results = solver.results
+print(rs)
+xs_opt = rs.xs.tolist()

@@ -1,0 +1,5 @@
+lb = np.array([0, 0])
+ub = np.array([20, 20])
+boxcstr = proxddp.constraints.BoxConstraint(lb, ub)
+fn = proxddp.ControlErrorResidual(space.ndx, np.zeros(nu))
+stage.addConstraint(fn, boxcstr)
